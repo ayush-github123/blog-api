@@ -1,0 +1,128 @@
+POST http://127.0.0.1:8000/auth/register/
+Content-Type: application/json
+
+{
+    "username": "user2",
+    "email": "kr7zs@jxpomup.com",
+    "password":"ayush@1234",
+    "confirm_password":"ayush@1234"
+}
+
+###
+
+POST http://127.0.0.1:8000/auth/login/
+Content-Type: application/json
+
+{
+    "username":"user2",
+    "password":"ayush@1234"
+}
+
+###
+
+
+GET http://127.0.0.1:8000/api/posts/
+# Authorization: Bearer 
+
+
+### 4️⃣ Create a Post (Authenticated)
+POST http://127.0.0.1:8000/api/posts/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc4NDU3LCJpYXQiOjE3NDI4OTIwNTcsImp0aSI6IjY1ZTY0YzhiZDBhODQ4OGU5MDA4Yjc1NDY3NDBiZTgwIiwidXNlcl9pZCI6MX0.tbE2fCCXWXxsaTIMu5TGnVNuJxt-rJaLMlJ5GFscbt4 
+
+{
+    "title": "My First Blog",
+    "content": "This is my first post using Django!",
+    "category": 1,
+    "tags": ["Django", "REST"]
+}
+
+### 5️⃣ Get a Specific Post
+GET http://127.0.0.1:8000/posts/1/
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc4NDU3LCJpYXQiOjE3NDI4OTIwNTcsImp0aSI6IjY1ZTY0YzhiZDBhODQ4OGU5MDA4Yjc1NDY3NDBiZTgwIiwidXNlcl9pZCI6MX0.tbE2fCCXWXxsaTIMu5TGnVNuJxt-rJaLMlJ5GFscbt4
+
+
+### 6️⃣ Update a Post (Only Owner)
+PUT http://127.0.0.1:8000/posts/1/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc4NDU3LCJpYXQiOjE3NDI4OTIwNTcsImp0aSI6IjY1ZTY0YzhiZDBhODQ4OGU5MDA4Yjc1NDY3NDBiZTgwIiwidXNlcl9pZCI6MX0.tbE2fCCXWXxsaTIMu5TGnVNuJxt-rJaLMlJ5GFscbt4 
+Content-Type: application/json
+
+{
+    "title": "Updated Blog 1",
+    "content": "Updated content of Blog 1!",
+    "category": 2
+}
+
+### 7️⃣ Delete a Post (Only Owner)
+DELETE http://127.0.0.1:8000/posts/2/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc4NDU3LCJpYXQiOjE3NDI4OTIwNTcsImp0aSI6IjY1ZTY0YzhiZDBhODQ4OGU5MDA4Yjc1NDY3NDBiZTgwIiwidXNlcl9pZCI6MX0.tbE2fCCXWXxsaTIMu5TGnVNuJxt-rJaLMlJ5GFscbt4
+
+### 8️⃣ Get All Categories
+GET http://127.0.0.1:8000/categories/
+
+
+### 9️⃣ Create a New Category (Admin Only)
+POST http://127.0.0.1:8000/categories/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc4NjU1LCJpYXQiOjE3NDI4OTIyNTUsImp0aSI6ImQxMDk1NDhkNWM5YjRkMzE5YWU2ZDYzOTIzMmM0NTAzIiwidXNlcl9pZCI6Mn0.XUMrXdtgdkmXj3jZWNCnR-DeniAjkxBrggTkw6Fxm_o
+Content-Type: application/json
+
+{
+    "name": "Food"
+}
+
+
+### 🔟 Get All Tags
+GET http://127.0.0.1:8000/tags/
+
+
+
+### 1️⃣1️⃣ Create a New Tag (Authenticated)
+POST http://127.0.0.1:8000/tags/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc4NDU3LCJpYXQiOjE3NDI4OTIwNTcsImp0aSI6IjY1ZTY0YzhiZDBhODQ4OGU5MDA4Yjc1NDY3NDBiZTgwIiwidXNlcl9pZCI6MX0.tbE2fCCXWXxsaTIMu5TGnVNuJxt-rJaLMlJ5GFscbt4
+Content-Type: application/json
+
+{
+    "name": "Backend"
+}
+
+### 1️⃣2️⃣ Get Posts by Category
+GET http://127.0.0.1:8000/posts/?category=2
+
+
+### 1️⃣3️⃣ Get Posts by Tag
+GET http://127.0.0.1:8000/posts/?tags=2
+
+### 1️⃣4️⃣ Get All Comments for a Post
+GET http://127.0.0.1:8000/posts/1/comments/
+
+
+### 1️⃣5️⃣ Create a Comment (Authenticated)
+POST http://127.0.0.1:8000/posts/1/comments/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc5MDg5LCJpYXQiOjE3NDI4OTI2ODksImp0aSI6IjBhMTJjN2ViYTE1NzQyMWU4NzY0NmQ4MDYzZWIxZGZlIiwidXNlcl9pZCI6M30.u8ntwaSEMwQdWFNqg-H-PEehDYe-_zog9LnfPDtXlig
+Content-Type: application/json
+
+{
+    "content": "comment by user2 on post 2!"
+}
+
+
+
+### 1️⃣6️⃣ Update a Comment (Only Owner)
+PUT http://127.0.0.1:8000/posts/1/comments/1/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc5MDg5LCJpYXQiOjE3NDI4OTI2ODksImp0aSI6IjBhMTJjN2ViYTE1NzQyMWU4NzY0NmQ4MDYzZWIxZGZlIiwidXNlcl9pZCI6M30.u8ntwaSEMwQdWFNqg-H-PEehDYe-_zog9LnfPDtXlig
+Content-Type: application/json
+
+{
+    "content": "Updated comment by user2 on post1"
+}
+
+
+
+### 1️⃣7️⃣ Delete a Comment (Only Owner)
+DELETE http://127.0.0.1:8000/posts/1/comments/1/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc5MDg5LCJpYXQiOjE3NDI4OTI2ODksImp0aSI6IjBhMTJjN2ViYTE1NzQyMWU4NzY0NmQ4MDYzZWIxZGZlIiwidXNlcl9pZCI6M30.u8ntwaSEMwQdWFNqg-H-PEehDYe-_zog9LnfPDtXlig 
+
+
+
+
+

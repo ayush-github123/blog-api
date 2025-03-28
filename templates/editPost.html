@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Blog Post</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #tags-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .tag-chip {
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .tag-chip button {
+            background: none;
+            border: none;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Edit Blog Post</h2>
+        <form id="edit-post-form">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea id="content" name="content" rows="10" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                    <!-- Categories will be dynamically populated -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Tags</label>
+                <div id="tags-input"></div>
+                <input type="text" id="new-tag" placeholder="Add a tag">
+                <button type="button" id="add-tag">Add Tag</button>
+            </div>
+
+            <button type="submit" class="submit-btn">Update Post</button>
+        </form>
+    </div>
+
+    <script>
+        // Fetch post details for editing
+        async function fetchPostDetails() {
+            const postId = new URLSearchParams(window.location.search).get('id');
+            
+            try {
+                const token = localStorage.getItem('jwt_token');
+                const response = await fetch(`/api/posts/${postId}/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const post = await response.json();
+
+                // Populate form fields
+                document.getElementById('title').value = post.title;
+                document.getElementById('content').value = post.content;
+                
+                // Populate and select category
+                fetchCategories(post.category);
+
+                // Populate tags
+                selectedTags.push(...post.tags);
+                renderTags();
+            } catch (error) {
+                console.error('Error fetching post details:', error);
+                alert('Failed to load post details');
+            }
+        }
+
+        // Fetch categories for dropdown
+        async function fetchCategories(selectedCategory) {
+            const categorySelect = document.getElementById('category');
+
+            try {
+                const token = localStorage.getItem('jwt_token');
+                const response = await fetch('/api/categories/', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const categories = await response.json();
+
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.name;
+                    option.textContent = category.name;
+                    
+                    // Select the current post's category
+                    if (category.name === selectedCategory) {
+                        option.selected = true;
+                    }
+                    
+                    categorySelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+                categorySelect.innerHTML = '<option>Error loading categories</option>';
+            }
+        }
+
+        // Tag management
+        const tagsInput = document.getElementById('tags-input');
+        const newTagInput = document.getElementById('new-tag');
+        const addTagButton = document.getElementById('add-tag');
+        const selectedTags = [];
+
+        addTagButton.addEventListener('click', () => {
+            const newTag = newTagInput.value.trim();
+            if (newTag && !selectedTags.includes(newTag)) {
+                selectedTags.push(newTag);
+                renderTags();
+                newTagInput.value = '';
+            }
+        });
+
+        function renderTags() {
+            tagsInput.innerHTML = '';
+            selectedTags.forEach(tag => {
+                const tagChip = document.createElement('div');
+                tagChip.className = 'tag-chip';
+                tagChip.innerHTML = `
+                    ${tag}
+                    <button type="button" onclick="removeTag('${tag}')">×</button>
+                `;
+                tagsInput.appendChild(tagChip);
+            });
+        }
+
+        // Global function to remove tags
+        window.removeTag = function(tag) {
+            const index = selectedTags.indexOf(tag);
+            if (index > -1) {
+                selectedTags.splice(index, 1);
+                renderTags();
+            }
+        };
+
+        // Submit edit post form
+        document.getElementById('edit-post-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const postId = new URLSearchParams(window.location.search).get('id');
+
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const category = document.getElementById('category').value;
+
+            try {
+                const token = localStorage.getItem('jwt_token');
+                const response = await fetch(`/api/posts/${postId}/`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        title,
+                        content,
+                        category,
+                        tags: selectedTags
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Redirect to the updated post
+                    window.location.href = `/post.html?id=${postId}`;
+                } else {
+                    alert('Failed to update post: ' + (data.detail || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Post update error:', error);
+                alert('Error updating post');
+            }
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchPostDetails();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlogbyAyush - Latest Articles</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --background-light: #f4f6f7;
+            --text-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-light);
+            color: var(--text-color);
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .navbar-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 300px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-section h3 {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .search-box {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .search-box button {
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .category-list, .tags-list {
+            list-style: none;
+        }
+
+        .category-list li, .tags-list li {
+            margin-bottom: 10px;
+        }
+
+        .category-list a, .tags-list a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .category-list a:hover, .tags-list a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .blog-posts {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .blog-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .blog-card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .blog-card-content {
+            padding: 15px;
+        }
+
+        .blog-card-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .blog-card-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            margin: 0 10px;
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Tech Blog</div>
+            <div class="navbar-links" id="auth-links">
+                <a href="{% url 'login-page' %}" id="login-link">Login</a>
+                <a href="{% url 'register-page' %}" id="signup-link">Sign Up</a>
+            </div>
+            <div class="navbar-links" id="user-links" style="display: none;">
+                <a href="{% url 'create-post' %}">Write a Post</a>
+                <a href="/profile.html">My Profile</a>
+                <a href="#" id="logout-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Search Section -->
+            <div class="sidebar-section">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search articles...">
+                    <button id="searchButton">Search</button>
+                </div>
+            </div>
+
+            <!-- Categories Section -->
+            <div class="sidebar-section">
+                <h3>Categories</h3>
+                <ul class="category-list" id="categories-list">
+                    <!-- Categories will be dynamically populated -->
+                </ul>
+            </div>
+
+            <!-- Tags Section -->
+            <div class="sidebar-section">
+                <h3>Popular Tags</h3>
+                <ul class="tags-list" id="tags-list">
+                    <!-- Tags will be dynamically populated -->
+                </ul>
+            </div>
+
+            <!-- Related Articles Section -->
+            <div class="sidebar-section">
+                <h3>Trending Posts</h3>
+                <ul id="trending-posts">
+                    <!-- Trending posts will be dynamically populated -->
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="blog-posts" id="blog-posts-container">
+                <!-- Blog posts will be dynamically loaded here -->
+            </div>
+
+            <div class="pagination">
+                <button id="prev-page">Previous</button>
+                <button id="next-page">Next</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Authentication Status Check
+        function checkAuthStatus() {
+            const token = localStorage.getItem('jwt_token');
+            const authLinks = document.getElementById('auth-links');
+            const userLinks = document.getElementById('user-links');
+            
+            if (token) {
+                authLinks.style.display = 'none';
+                userLinks.style.display = 'flex';
+            } else {
+                authLinks.style.display = 'flex';
+                userLinks.style.display = 'none';
+            }
+        }
+
+        // Logout Functionality
+        document.getElementById('logout-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('jwt_token');
+            checkAuthStatus();
+            window.location.href = '/login.html';
+        });
+
+        // Fetch Blog Posts
+        async function fetchBlogPosts(url = '/api/posts/', searchQuery = '', category = '', page = 1) {
+            const postsContainer = document.getElementById('blog-posts-container');
+            postsContainer.innerHTML = '<p>Loading posts...</p>';
+
+            try {
+                const token = localStorage.getItem('jwt_token');
+                const response = await fetch(`${url}?search=${searchQuery}&category=${category}&page=${page}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                console.log(data)
+
+                // Clear previous posts
+                postsContainer.innerHTML = '';
+
+                // Render blog posts
+                data.forEach(post => {
+                    console.log(post)
+                    const postCard = document.createElement('div');
+                    postCard.classList.add('blog-card');
+                    postCard.innerHTML = `
+                        <img src="${post.image}" alt="${post.title}" class="blog-card-image">
+                        <div class="blog-card-content">
+                            <h2 class="blog-card-title">${post.title}</h2>
+                            <p>${post.content.substring(0, 100)}...</p>
+                            <div class="blog-card-meta">
+                                <span>By ${post.user}</span>
+                                <span>${new Date(post.created_at).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    `;
+                    postCard.addEventListener('click', () => {
+                        window.location.href = `/post.html?id=${post.id}`;
+                    });
+                    postsContainer.appendChild(postCard);
+                });
+
+                // Pagination Handling
+                const prevButton = document.getElementById('prev-page');
+                const nextButton = document.getElementById('next-page');
+                
+                prevButton.style.display = data.previous ? 'block' : 'none';
+                nextButton.style.display = data.next ? 'block' : 'none';
+
+                prevButton.onclick = () => fetchBlogPosts(data.previous);
+                nextButton.onclick = () => fetchBlogPosts(data.next);
+
+            } catch (error) {
+                postsContainer.innerHTML = '<p>Error loading posts. Please try again.</p>';
+                console.error('Posts fetch error:', error);
+            }
+        }
+
+        // Fetch Categories
+        async function fetchCategories() {
+            const categoriesList = document.getElementById('categories-list');
+            
+            try {
+                const response = await fetch('/api/categories/');
+                const categories = await response.json();
+
+                categories.forEach(category => {
+                    const categoryItem = document.createElement('li');
+                    const categoryLink = document.createElement('a');
+                    categoryLink.href = '#';
+                    categoryLink.textContent = category.name;
+                    categoryLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        fetchBlogPosts('/api/posts/', '', category.name);
+                    });
+                    categoryItem.appendChild(categoryLink);
+                    categoriesList.appendChild(categoryItem);
+                });
+            } catch (error) {
+                console.error('Categories fetch error:', error);
+            }
+        }
+
+        // Fetch Tags
+        async function fetchTags() {
+            const tagsList = document.getElementById('tags-list');
+            
+            try {
+                const response = await fetch('/api/tags/');
+                const tags = await response.json();
+
+                tags.forEach(tag => {
+                    const tagItem = document.createElement('li');
+                    const tagLink = document.createElement('a');
+                    tagLink.href = '#';
+                    tagLink.textContent = tag.name;
+                    tagLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        fetchBlogPosts('/api/posts/', '', '', tag.name);
+                    });
+                    tagItem.appendChild(tagLink);
+                    tagsList.appendChild(tagItem);
+                });
+            } catch (error) {
+                console.error('Tags fetch error:', error);
+            }
+        }
+
+        // Search Functionality
+        document.getElementById('searchButton').addEventListener('click', () => {
+            const searchQuery = document.getElementById('searchInput').value;
+            fetchBlogPosts('/api/posts/', searchQuery);
+        });
+
+        // Initialize Page
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuthStatus();
+            fetchBlogPosts();
+            fetchCategories();
+            fetchTags();
+        });
+    </script>
+</body>
+</html>
