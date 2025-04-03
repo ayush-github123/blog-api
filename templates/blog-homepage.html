@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlogHub - Discover Amazing Stories</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md py-4 fixed w-full z-10">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-gray-800">BlogHub</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#" class="text-gray-600 hover:text-gray-900">Home</a>
+                <a href="#" class="text-gray-600 hover:text-gray-900">Categories</a>
+                <a href="#" class="text-gray-600 hover:text-gray-900">About</a>
+                <div class="relative group">
+                    <button class="text-gray-600 hover:text-gray-900 focus:outline-none">More</button>
+                    <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Contact Us</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">FAQ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="searchBtn" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div id="userSection">
+                    <a href="login.html" class="px-4 py-2 text-sm text-blue-600 hover:text-blue-800">Sign In</a>
+                    <a href="register.html" class="px-4 py-2 text-sm bg-blue-600 text-white rounded-full hover:bg-blue-700">Get Started</a>
+                </div>
+                <div id="loggedInUserSection" class="hidden">
+                    <div class="relative group">
+                        <button class="flex items-center focus:outline-none">
+                            <img src="/api/placeholder/40/40" alt="User" class="h-8 w-8 rounded-full">
+                            <span class="ml-2 text-gray-700">Username</span>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">New Post</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                            <hr class="my-1">
+                            <button id="logoutBtn" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Sign Out</button>
+                        </div>
+                    </div>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="md:hidden hidden bg-white border-t mt-4">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100">Home</a>
+                <a href="#" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100">Categories</a>
+                <a href="#" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100">About</a>
+                <a href="#" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100">Contact Us</a>
+                <a href="#" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100">FAQ</a>
+            </div>
+        </div>
+        <!-- Search Bar -->
+        <div id="searchBar" class="hidden container mx-auto px-4 py-3 mt-2">
+            <div class="relative">
+                <input type="text" placeholder="Search articles, authors, or tags..." class="w-full pl-10 pr-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <div class="absolute left-3 top-3 text-gray-400">
+                    <i class="fas fa-search"></i>
+                </div>
+                <button id="closeSearchBtn" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="pt-24 pb-12 md:pt-32 md:pb-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">Share your ideas with the world</h1>
+                <p class="text-xl text-gray-600 mb-8">Discover stories, thinking, and expertise from writers on any topic.</p>
+                <a href="register.html" class="inline-block px-8 py-3 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition duration-300">Start Writing</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Categories -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex overflow-x-auto pb-2 -mx-4 px-4 space-x-2 scrollbar-hide">
+            <button class="category-btn bg-gray-900 text-white px-4 py-2 rounded-full text-sm font-medium flex-shrink-0">All</button>
+            <button class="category-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium flex-shrink-0 hover:bg-gray-200">Technology</button>
+            <button class="category-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium flex-shrink-0 hover:bg-gray-200">Programming</button>
+            <button class="category-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium flex-shrink-0 hover:bg-gray-200">Design</button>
+            <button class="category-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium flex-shrink-0 hover:bg-gray-200">Business</button>
+            <button class="category-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium flex-shrink-0 hover:bg-gray-200">Science</button>
+            <button class="category-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium flex-shrink-0 hover:bg-gray-200">Health</button>
+            <button class="category-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium flex-shrink-0 hover:bg-gray-200">Food</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-wrap -mx-4">
+            <!-- Main Articles Section -->
+            <div class="w-full lg:w-8/12 px-4">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Trending Articles</h2>
+                
+                <!-- Article Item -->
+                <div class="blog-post border-b border-gray-200 pb-8 mb-8">
+                    <div class="flex items-center mb-4">
+                        <img src="/api/placeholder/40/40" alt="Avatar" class="w-10 h-10 rounded-full mr-3">
+                        <div>
+                            <p class="text-gray-900 font-medium">John Doe</p>
+                            <p class="text-gray-500 text-sm">Mar 25, 2025 · 8 min read</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:flex-row">
+                        <div class="md:w-2/3 mb-4 md:mb-0 md:pr-6">
+                            <a href="blog-detail.html" class="block">
+                                <h3 class="text-xl font-bold text-gray-900 mb-2 hover:text-blue-600">My nth Blog: Adventures in Django Development</h3>
+                                <p class="text-gray-600 mb-4">This is my first post using Django! Learn how I built a full-featured blog application with authentication, comments, and more.</p>
+                            </a>
+                            <div class="flex items-center justify-between">
+                                <div class="flex space-x-2">
+                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">Django</span>
+                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">REST</span>
+                                </div>
+                                <div class="flex items-center text-gray-500 space-x-4">
+                                    <button class="flex items-center space-x-1 hover:text-red-500">
+                                        <i class="far fa-heart"></i>
+                                        <span>24</span>
+                                    </button>
+                                    <button class="flex items-center space-x-1 hover:text-blue-500">
+                                        <i class="far fa-comment"></i>
+                                        <span>5</span>
+                                    </button>
+                                    <button class="flex items-center space-x-1 hover:text-green-500">
+                                        <i class="far fa-bookmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="md:w-1/3">
+                            <a href="blog-detail.html">
+                                <img src="/api/placeholder/300/200" alt="Blog Image" class="w-full h-48 object-cover rounded-lg">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Article Item -->
+                <div class="blog-post border-b border-gray-200 pb-8 mb-8">
+                    <div class="flex items-center mb-4">
+                        <img src="/api/placeholder/40/40" alt="Avatar" class="w-10 h-10 rounded-full mr-3">
+                        <div>
+                            <p class="text-gray-900 font-medium">Jane Smith</p>
+                            <p class="text-gray-500 text-sm">Mar 23, 2025 · 5 min read</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:flex-row">
+                        <div class="md:w-2/3 mb-4 md:mb-0 md:pr-6">
+                            <a href="blog-detail.html" class="block">
+                                <h3 class="text-xl font-bold text-gray-900 mb-2 hover:text-blue-600">Getting Started with Django REST Framework</h3>
+                                <p class="text-gray-600 mb-4">Explore the power of Django REST Framework. This tutorial shows you how to build a robust API for your web applications.</p>
+                            </a>
+                            <div class="flex items-center justify-between">
+                                <div class="flex space-x-2">
+                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">Django</span>
+                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">API</span>
+                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">Backend</span>
+                                </div>
+                                <div class="flex items-center text-gray-500 space-x-4">
+                                    <button class="flex items-center space-x-1 hover:text-red-500">
+                                        <i class="far fa-heart"></i>
+                                        <span>42</span>
+                                    </button>
+                                    <button class="flex items-center space-x-1 hover:text-blue-500">
+                                        <i class="far fa-comment"></i>
+                                        <span>8</span>
+                                    </button>
+                                    <button class="flex items-center space-x-1 hover:text-green-500">
+                                        <i class="far fa-bookmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="md:w-1/3">
+                            <a href="blog-detail.html">
+                                <img src="/api/placeholder/300/200" alt="Blog Image" class="w-full h-48 object-cover rounded-lg">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Article Item -->
+                <div class="blog-post border-b border-gray-200 pb-8 mb-8">
+                    <div class="flex items-center mb-4">
+                        <img src="/api/placeholder/40/40" alt="Avatar" class="w-10 h-10 rounded-full mr-3">
+                        <div>
+                            <p class="text-gray-900 font-medium">Michael Johnson</p>
+                            <p class="text-gray-500 text-sm">Mar 21, 2025 · 10 min read</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:flex-row">
+                        <div class="md:w-2/3 mb-4 md:mb-0 md:pr-6">
+                            <a href="blog-detail.html" class="block">
+                                <h3 class="text-xl font-bold text-gray-900 mb-2 hover:text-blue-600">Building a React Frontend for Your Django API</h3>
+                                <p class="text-gray-600 mb-4">Complete guide to connecting a React frontend to your Django REST API. Learn about authentication, state management, and more.</p>
+                            </a>
+                            <div class="flex items-center justify-between">
+                                <div class="flex space-x-2">
+                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">React</span>
+                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">Django</span>
+                                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">Frontend</span>
+                                </div>
+                                <div class="flex items-center text-gray-500 space-x-4">
+                                    <button class="flex items-center space-x-1 hover:text-red-500">
+                                        <i class="far fa-heart"></i>
+                                        <span>37</span>
+                                    </button>
+                                    <button class="flex items-center space-x-1 hover:text-blue-500">
+                                        <i class="far fa-comment"></i>
+                                        <span>12</span>
+                                    </button>
+                                    <button class="flex items-center space-x-1 hover:text-green-500">
+                                        <i class="far fa-bookmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="md:w-1/3">
+                            <a href="blog-detail.html">
+                                <img src="/api/placeholder/300/200" alt="Blog Image" class="w-full h-48 object-cover rounded-lg">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Load More Button -->
+                <div class="text-center mt-8">
+                    <button id="loadMoreBtn" class="px-6 py-3 bg-white border border-gray-300 rounded-full text-gray-700 font-medium hover:bg-gray-50 transition duration-300">Load More Articles</button>
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="w-full lg:w-4/12 px-4 mt-12 lg:mt-0">
+                <div class="sticky top-24">
+                    <!-- Popular Tags -->
+                    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Popular Tags</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <a href="#" class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-200">Django</a>
+                            <a href="#" class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-200">REST</a>
+                            <a href="#" class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-200">Python</a>
+                            <a href="#" class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-200">React</a>
+                            <a href="#" class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-200">API</a>
+                            <a href="#" class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-200">Frontend</a>
+                            <a href="#" class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-200">Backend</a>
+                            <a href="#" class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm hover:bg-gray-200">JavaScript</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Featured Authors -->
+                    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Featured Authors</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <img src="/api/placeholder/40/40" alt="Author" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <p class="text-gray-900 font-medium">John Doe</p>
+                                    <p class="text-gray-500 text-sm">Django Developer</p>
+                                </div>
+                                <button class="ml-auto text-blue-600 hover:text-blue-800 text-sm font-medium">Follow</button>
+                            </div>
+                            <div class="flex items-center">
+                                <img src="/api/placeholder/40/40" alt="Author" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <p class="text-gray-900 font-medium">Jane Smith</p>
+                                    <p class="text-gray-500 text-sm">Full Stack Developer</p>
+                                </div>
+                                <button class="ml-auto text-blue-600 hover:text-blue-800 text-sm font-medium">Follow</button>
+                            </div>
+                            <div class="flex items-center">
+                                <img src="/api/placeholder/40/40" alt="Author" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <p class="text-gray-900 font-medium">Michael Johnson</p>
+                                    <p class="text-gray-500 text-sm">UI/UX Designer</p>
+                                </div>
+                                <button class="ml-auto text-blue-600 hover:text-blue-800 text-sm font-medium">Follow</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Newsletter -->
+                    <div class="bg-gray-100 rounded-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Subscribe to our newsletter</h3>
+                        <p class="text-gray-600 mb-4">Get the latest articles and resources directly to your inbox.</p>
+                        <form class="space-y-3">
+                            <input type="email" placeholder="Your email address" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-300">Subscribe</button>
+                        </form>
+                        <p class="text-xs text-gray-500 mt-3">We respect your privacy. Unsubscribe at any time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">BlogHub</h3>
+                    <p class="text-gray-400 mb-4">Share your ideas with the world and discover amazing stories from writers on any topic.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Navigation</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Categories</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Popular Posts</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Featured Authors</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Writing Guidelines</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">API Documentation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Status</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 BlogHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle mobile menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Toggle search bar
+        const searchBtn = document.getElementById('searchBtn');
+        const closeSearchBtn = document.getElementById('closeSearchBtn');
+        const searchBar = document.getElementById('searchBar');
+        
+        searchBtn.addEventListener('click', () => {
+            searchBar.classList.toggle('hidden');
+        });
+        
+        closeSearchBtn.addEventListener('click', () => {
+            searchBar.classList.add('hidden');
+        });
+        
+        // Category buttons
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                categoryBtns.forEach(b => {
+                    b.classList.remove('bg-gray-900', 'text-white');
+                    b.classList.add('bg-gray-100', 'text-gray-700');
+                });
+                
+                // Add active class to clicked button
+                btn.classList.remove('bg-gray-100', 'text-gray-700');
+                btn.classList.add('bg-gray-900', 'text-white');
+                
+                // Here you would fetch posts by category
+                // fetchPostsByCategory(btn.textContent);
+            });
+        });
+        
+        // Load more posts
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        
+        loadMoreBtn.addEventListener('click', () => {
+            // Simulate loading state
+            loadMoreBtn.textContent = 'Loading...';
+            
+            // Here you would fetch more posts from the API
+            // For demo, we'll just add a timeout
+            setTimeout(() => {
+                // Create new post elements and append them to the posts container
+                // This is just a simplified example
+                const blogPosts = document.querySelectorAll('.blog-post');
+                const lastPost = blogPosts[blogPosts.length - 1];
+                const postsContainer = lastPost.parentElement;
+                
+                // Clone the last post a couple times for demo purposes
+                const newPost1 = lastPost.cloneNode(true);
+                const newPost2 = lastPost.cloneNode(true);
+                
+                postsContainer.insertBefore(newPost1, loadMoreBtn.parentElement);
+                postsContainer.insertBefore(newPost2, loadMoreBtn.parentElement);
+                
+                // Reset button text
+                loadMoreBtn.textContent = 'Load More Articles';
+            }, 1000);
+        });
+        
+        // Initialize blog posts fetch
+        document.addEventListener('DOMContentLoaded', () => {
+            // Function to fetch blog posts from your API
+            async function fetchPosts() {
+                try {
+                    const response = await fetch('http://127.0.0.1:8000/api/posts/');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    // Process the data and update the UI
+                    console.log('Posts fetched:', data);
+                    // updatePostsUI(data);
+                } catch (error) {
+                    console.error('Error fetching posts:', error);
+                }
+            }
+            
+            // Call the function to fetch posts
+            fetchPosts();
+        });
+    </script>
+</body>
+</html>

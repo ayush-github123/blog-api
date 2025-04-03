@@ -3,262 +3,917 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New Blog Post</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Create Post - BlogSpace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.min.css">
     <style>
+        /* Global Styles */
+        :root {
+            --primary: #1a8917;
+            --primary-light: #4caf50;
+            --dark: #212121;
+            --light: #f9f9f9;
+            --grey: #757575;
+            --light-grey: #e0e0e0;
+            --danger: #f44336;
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background: linear-gradient(135deg, #f6f8f9 0%, #e5ebee 100%);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--light);
         }
+        
+        a {
+            text-decoration: none;
+            color: var(--primary);
+            transition: color 0.3s ease;
+        }
+        
+        a:hover {
+            color: var(--primary-light);
+        }
+        
         .container {
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
         }
-        .container:hover {
-            transform: translateY(-5px);
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
         }
-        .image-preview {
-            max-height: 200px;
-            object-fit: cover;
+        
+        .btn:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .navbar-nav {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+        
+        .nav-item {
+            margin-left: 20px;
+        }
+        
+        .nav-item .btn {
+            padding: 8px 16px;
+        }
+        
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .dropdown-toggle img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .dropdown-toggle i {
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            min-width: 200px;
+            display: none;
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 10px 15px;
+            color: var(--dark);
+            transition: background-color 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+            color: var(--primary);
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--light-grey);
+            margin: 5px 0;
+        }
+        
+        /* Post Editor Styles */
+        .editor-container {
+            background-color: white;
             border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 30px;
+            padding: 30px;
         }
-        .tag-chip {
-            transition: background-color 0.2s ease;
+        
+        .editor-header {
+            margin-bottom: 25px;
         }
-        .tag-chip:hover {
-            background-color: #e0e0e0;
+        
+        .editor-header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .editor-header p {
+            color: var(--grey);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-grey);
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .title-input {
+            font-size: 24px;
+            font-weight: 500;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        /* Quill editor custom styles */
+        .ql-container {
+            height: 400px;
+            font-size: 16px;
+            margin-bottom: 30px;
+            border: 1px solid var(--light-grey);
+            border-radius: 0 0 4px 4px;
+        }
+        
+        .ql-toolbar {
+            border-radius: 4px 4px 0 0;
+            border: 1px solid var(--light-grey);
+            border-bottom: none;
+        }
+        
+        /* Tags input */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            display: flex;
+            align-items: center;
+            background-color: #e8f5e9;
+            color: var(--primary);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .tag .remove-tag {
+            margin-left: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .tags-input {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            min-height: 48px;
+            padding: 0 8px;
+            border: 1px solid var(--light-grey);
+            border-radius: 4px;
+        }
+        
+        .tags-input input {
+            flex: 1;
+            border: none;
+            height: 46px;
+            font-size: 16px;
+            padding: 0 8px;
+        }
+        
+        .tags-input input:focus {
+            outline: none;
+        }
+        
+        /* Actions bar */
+        .editor-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-grey);
+        }
+        
+        /* Featured image */
+        .featured-image-container {
+            margin-bottom: 25px;
+        }
+        
+        .featured-image-preview {
+            width: 100%;
+            height: 300px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .featured-image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .featured-image-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--grey);
+        }
+        
+        .featured-image-placeholder i {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .featured-image-preview:hover .image-overlay {
+            opacity: 1;
+        }
+        
+        /* Alert messages */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .alert-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        
+        .alert-danger {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+        
+        /* Select element */
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-grey);
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23212121' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 12px;
+        }
+        
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        /* Loader */
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .editor-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .editor-actions .btn {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
-    <div class="container bg-white w-full max-w-2xl rounded-xl p-8 space-y-6">
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Create New Blog Post</h2>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="index.html" class="navbar-brand">BlogSpace</a>
+            
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Trending</a>
+                </li>
+                
+                <li class="nav-item dropdown" id="user-dropdown">
+                    <div class="dropdown-toggle">
+                        <img src="/api/placeholder/100/100" alt="User avatar">
+                        <span id="username">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-user mr-2"></i> My Profile
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-file-alt mr-2"></i> My Posts
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-bookmark mr-2"></i> Bookmarks
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="create-post.html" class="dropdown-item">
+                            <i class="fas fa-plus mr-2"></i> Create Post
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" id="logout-btn">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div id="editor-alert" class="alert" style="display: none;"></div>
         
-        <form id="create-post-form" class="space-y-4" enctype="multipart/form-data">
-            <div>
-                <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Title</label>
-                <input 
-                    type="text" 
-                    id="title" 
-                    name="title" 
-                    required 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
+        <div class="editor-container">
+            <div class="editor-header">
+                <h1 id="editor-title">Create New Post</h1>
+                <p>Share your knowledge, ideas, and stories with the world</p>
             </div>
-
-            <div>
-                <label for="content" class="block text-sm font-medium text-gray-700 mb-2">Content</label>
-                <textarea 
-                    id="content" 
-                    name="content" 
-                    rows="8" 
-                    required 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                ></textarea>
-            </div>
-
-            <div>
-                <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                <select 
-                    id="category" 
-                    name="category" 
-                    required 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                    <!-- Categories will be dynamically populated -->
-                </select>
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
-                <div id="tags-input" class="flex flex-wrap gap-2 mb-2"></div>
-                <div class="flex">
-                    <input 
-                        type="text" 
-                        id="new-tag" 
-                        placeholder="Add a tag" 
-                        class="flex-grow px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                    <button 
-                        type="button" 
-                        id="add-tag" 
-                        class="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600 transition-colors"
-                    >
-                        Add Tag
-                    </button>
+            
+            <form id="post-form">
+                <div class="form-group">
+                    <label for="post-title">Title</label>
+                    <input type="text" id="post-title" class="form-control title-input" placeholder="Enter a catchy title for your post" required>
                 </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Featured Image</label>
-                <div class="flex items-center space-x-4">
-                    <input 
-                        type="file" 
-                        id="featured-image" 
-                        accept="image/*" 
-                        class="hidden"
-                    >
-                    <button 
-                        type="button" 
-                        id="upload-image-btn" 
-                        class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
-                    >
-                        Upload Image
-                    </button>
-                    <img 
-                        id="image-preview" 
-                        src="" 
-                        alt="Image Preview" 
-                        class="image-preview hidden max-w-xs"
-                    >
+                
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" class="form-select" required>
+                        <option value="" disabled selected>Select a category</option>
+                        <!-- Categories will be loaded dynamically -->
+                    </select>
                 </div>
-            </div>
-
-            <button 
-                type="submit" 
-                class="w-full py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-semibold"
-            >
-                Create Post
-            </button>
-        </form>
+                
+                <div class="form-group">
+                    <label>Featured Image</label>
+                    <div class="featured-image-preview" id="featured-image-preview">
+                        <div class="featured-image-placeholder" id="featured-image-placeholder">
+                            <i class="fas fa-image"></i>
+                            <p>Add a featured image</p>
+                        </div>
+                        <img id="featured-image" style="display: none;">
+                        <div class="image-overlay">
+                            <button type="button" class="btn" id="change-image-btn">Change Image</button>
+                        </div>
+                    </div>
+                    <input type="file" id="featured-image-input" style="display: none;" accept="image/*">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editor">Content</label>
+                    <div id="editor" style="height: 400px;"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tags-input">Tags</label>
+                    <div class="tags-input">
+                        <div class="tags-container" id="tags-container"></div>
+                        <input type="text" id="tags-input" placeholder="Add tags and press Enter" />
+                    </div>
+                    <small>Press Enter to add a tag, up to 5 tags</small>
+                </div>
+                
+                <div class="editor-actions">
+                    <div>
+                        <button type="button" class="btn btn-outline" id="save-draft-btn">Save as Draft</button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-danger" id="cancel-btn">Cancel</button>
+                        <button type="submit" class="btn" id="publish-btn">
+                            Publish Post
+                            <span class="loader" style="display: none;"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js"></script>
     <script>
-        // Previous script remains the same, with added image upload functionality
-        // Add these new functions to the existing script:
-        // Fetch categories for dropdown
-        let category_ids = {}
-        async function fetchCategories() {
-            const categorySelect = document.getElementById('category');
+        // DOM Elements
+        const postForm = document.getElementById('post-form');
+        const postTitleInput = document.getElementById('post-title');
+        const categorySelect = document.getElementById('category');
+        const editorContainer = document.getElementById('editor');
+        const tagsInput = document.getElementById('tags-input');
+        const tagsContainer = document.getElementById('tags-container');
+        const publishBtn = document.getElementById('publish-btn');
+        const saveDraftBtn = document.getElementById('save-draft-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const editorAlert = document.getElementById('editor-alert');
+        const featuredImagePreview = document.getElementById('featured-image-preview');
+        const featuredImagePlaceholder = document.getElementById('featured-image-placeholder');
+        const featuredImage = document.getElementById('featured-image');
+        const featuredImageInput = document.getElementById('featured-image-input');
+        const changeImageBtn = document.getElementById('change-image-btn');
+        const dropdownToggle = document.querySelector('.dropdown-toggle');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        const logoutBtn = document.getElementById('logout-btn');
+        const usernameDisplay = document.getElementById('username');
+        const editorTitle = document.getElementById('editor-title');
+        
+        // API Base URL
+        const API_BASE_URL = 'http://127.0.0.1:8000';
+        
+        // Check Authentication
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+            }
+            
+            // Display username
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user && user.username) {
+                usernameDisplay.textContent = user.username;
+            }
+        }
+        
+        // Initialize page
+        function init() {
+            checkAuth();
+            initQuillEditor();
+            loadCategories();
+            setupTagsInput();
+            setupImageUpload();
+            setupDropdown();
+            
+            // Check if editing existing post
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+            
+            if (postId) {
+                editorTitle.textContent = 'Edit Post';
+                loadPostData(postId);
+            }
+        }
+        
+        // Initialize Quill Editor
+        let quill;
+        function initQuillEditor() {
+            const toolbarOptions = [
+                ['bold', 'italic', 'underline', 'strike'],
+                ['blockquote', 'code-block'],
+                [{ 'header': 1 }, { 'header': 2 }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'script': 'sub'}, { 'script': 'super' }],
+                [{ 'indent': '-1'}, { 'indent': '+1' }],
+                [{ 'direction': 'rtl' }],
+                [{ 'size': ['small', false, 'large', 'huge'] }],
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'font': [] }],
+                [{ 'align': [] }],
+                ['clean'],
+                ['link', 'image']
+            ];
+            
+            quill = new Quill('#editor', {
+                modules: {
+                    toolbar: toolbarOptions
+                },
+                placeholder: 'Start writing your post...',
+                theme: 'snow'
+            });
+        }
+        
+        // Load Categories
+        async function loadCategories() {
             try {
-                const token = localStorage.getItem('jwt_token');
-                const response = await fetch('/api/categories/', {
+                const response = await fetch(`${API_BASE_URL}/categories/`);
+                
+                if (response.ok) {
+                    const categories = await response.json();
+                    
+                    categories.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.id;
+                        option.textContent = category.name;
+                        categorySelect.appendChild(option);
+                    });
+                } else {
+                    console.error('Failed to load categories');
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+        
+        // Tags input functionality
+        function setupTagsInput() {
+            const tags = new Set();
+            
+            tagsInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    
+                    const tag = tagsInput.value.trim();
+                    
+                    if (tag && tags.size < 5 && !tags.has(tag)) {
+                        addTag(tag);
+                        tags.add(tag);
+                        tagsInput.value = '';
+                    }
+                }
+            });
+            
+            function addTag(tag) {
+                const tagElement = document.createElement('div');
+                tagElement.className = 'tag';
+                tagElement.innerHTML = `
+                    ${tag}
+                    <span class="remove-tag">
+                        <i class="fas fa-times"></i>
+                    </span>
+                `;
+                
+                tagElement.querySelector('.remove-tag').addEventListener('click', () => {
+                    tagsContainer.removeChild(tagElement);
+                    tags.delete(tag);
+                });
+                
+                tagsContainer.appendChild(tagElement);
+            }
+        }
+        
+        // Image upload functionality
+        function setupImageUpload() {
+            featuredImagePreview.addEventListener('click', () => {
+                featuredImageInput.click();
+            });
+            
+            featuredImageInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                
+                if (file) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        featuredImage.src = e.target.result;
+                        featuredImage.style.display = 'block';
+                        featuredImagePlaceholder.style.display = 'none';
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        // Load post data for editing
+        async function loadPostData(postId) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                const categories = await response.json();
-                console.log(categories)
-
-                categories.forEach(category => {
-                    const option = document.createElement('option');
-                    option.value = category.name;
-                    option.textContent = category.name;
-                    categorySelect.appendChild(option);
-                    category_ids[category.name] = category.id; 
-
-                });
-            } catch (error) {
-                console.error('Error fetching categories:', error);
-                categorySelect.innerHTML = '<option>Error loading categories</option>';
-            }
-        }
-
-        // Tag management
-        const tagsInput = document.getElementById('tags-input');
-        const newTagInput = document.getElementById('new-tag');
-        const addTagButton = document.getElementById('add-tag');
-        const selectedTags = [];
-
-        addTagButton.addEventListener('click', () => {
-            const newTag = newTagInput.value.trim();
-            if (newTag && !selectedTags.includes(newTag)) {
-                selectedTags.push(newTag);
-                renderTags();
-                newTagInput.value = '';
-            }
-        });
-
-        function renderTags() {
-            tagsInput.innerHTML = '';
-            selectedTags.forEach(tag => {
-                const tagChip = document.createElement('div');
-                tagChip.className = 'tag-chip';
-                tagChip.innerHTML = `
-                    ${tag}
-                    <button type="button" onclick="removeTag('${tag}')">×</button>
-                `;
-                tagsInput.appendChild(tagChip);
-            });
-        }
-
-        // Global function to remove tags
-        window.removeTag = function(tag) {
-            const index = selectedTags.indexOf(tag);
-            if (index > -1) {
-                selectedTags.splice(index, 1);
-                renderTags();
-            }
-        };
-
-
-
-        const uploadImageBtn = document.getElementById('upload-image-btn');
-        const featuredImageInput = document.getElementById('featured-image');
-        const imagePreview = document.getElementById('image-preview');
-
-        uploadImageBtn.addEventListener('click', () => {
-            featuredImageInput.click();
-        });
-
-        featuredImageInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    imagePreview.src = event.target.result;
-                    imagePreview.classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-        fetchCategories()
-
-
-        // Modify the form submission to include image
-        document.getElementById('create-post-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const title = document.getElementById('title').value;
-            const content = document.getElementById('content').value;
-            const categoryName = document.getElementById('category').value;
-            const featuredImage = featuredImageInput.files[0];
-
-            const categoryID = category_ids[categoryName];
-
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('content', content);
-            formData.append('category', categoryID);
-            formData.append('tags', JSON.stringify(selectedTags));
-            
-            if (featuredImage) {
-                formData.append('featured_image', featuredImage);
-            }
-
-            try {
-                const token = localStorage.getItem('jwt_token');
-                const response = await fetch('/api/posts/', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: formData
-                });
-
-                const data = await response.json();
-                console.log(data)
-
+                
                 if (response.ok) {
-                    // window.location.href = `/post.html?id=${data.id}`;
-                    window.location.href = `/`;
+                    const post = await response.json();
+                    
+                    // Fill form fields
+                    postTitleInput.value = post.title;
+                    categorySelect.value = post.category;
+                    quill.root.innerHTML = post.content;
+                    
+                    // Load tags
+                    if (post.tags && post.tags.length > 0) {
+                        const tagsContainer = document.getElementById('tags-container');
+                        tagsContainer.innerHTML = '';
+                        
+                        post.tags.forEach(tag => {
+                            const tagElement = document.createElement('div');
+                            tagElement.className = 'tag';
+                            tagElement.innerHTML = `
+                                ${tag}
+                                <span class="remove-tag">
+                                    <i class="fas fa-times"></i>
+                                </span>
+                            `;
+                            
+                            tagElement.querySelector('.remove-tag').addEventListener('click', () => {
+                                tagsContainer.removeChild(tagElement);
+                            });
+                            
+                            tagsContainer.appendChild(tagElement);
+                        });
+                    }
+                    
+                    // For featured image, you'd typically have a URL in your API response
+                    // but for this example, we'll leave it as is
                 } else {
-                    alert('Failed to create post: ' + (data.detail || 'Unknown error'));
+                    showAlert('Failed to load post data', 'danger');
                 }
             } catch (error) {
-                console.error('Post creation error:', error);
-                alert('Error creating post');
+                console.error('Error loading post data:', error);
+                showAlert('An error occurred while loading post data', 'danger');
+            }
+        }
+        
+        // Dropdown toggle
+        function setupDropdown() {
+            dropdownToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('show');
+            });
+            
+            document.addEventListener('click', () => {
+                if (dropdownMenu.classList.contains('show')) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+            
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                localStorage.removeItem('token');
+                localStorage.removeItem('refresh_token');
+                localStorage.removeItem('user');
+                
+                window.location.href = 'login.html';
+            });
+        }
+        
+        // Form submission
+        postForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Validate form
+            if (!postTitleInput.value.trim()) {
+                showAlert('Please enter a title for your post', 'danger');
+                return;
+            }
+            
+            if (!categorySelect.value) {
+                showAlert('Please select a category', 'danger');
+                return;
+            }
+            
+            const content = quill.root.innerHTML;
+            if (content === '<p><br></p>' || content === '') {
+                showAlert('Please add some content to your post', 'danger');
+                return;
+            }
+            
+            // Collect tags
+            const tagElements = tagsContainer.querySelectorAll('.tag');
+            const tags = Array.from(tagElements).map(el => el.textContent.trim());
+            
+            // Prepare post data
+            const postData = {
+                title: postTitleInput.value.trim(),
+                content: content,
+                category: parseInt(categorySelect.value),
+                tags: tags
+            };
+            
+            // Show loader
+            const loader = publishBtn.querySelector('.loader');
+            publishBtn.disabled = true;
+            loader.style.display = 'inline-block';
+            
+            try {
+                const token = localStorage.getItem('token');
+                
+                // Check if editing or creating
+                const urlParams = new URLSearchParams(window.location.search);
+                const postId = urlParams.get('id');
+                
+                let url = `${API_BASE_URL}/api/posts/`;
+                let method = 'POST';
+                
+                if (postId) {
+                    url = `${API_BASE_URL}/api/posts/${postId}/`;
+                    method = 'PUT';
+                }
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(postData)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Redirect to post page
+                    window.location.href = `post.html?id=${data.id}`;
+                } else {
+                    const errorData = await response.json();
+                    let errorMessage = 'Failed to publish post';
+                    
+                    if (typeof errorData === 'object') {
+                        errorMessage = Object.entries(errorData)
+                            .map(([key, value]) => `${key}: ${value}`)
+                            .join(', ');
+                    }
+                    
+                    showAlert(errorMessage, 'danger');
+                }
+            } catch (error) {
+                console.error('Error publishing post:', error);
+                showAlert('An error occurred while publishing your post', 'danger');
+            } finally {
+                // Hide loader
+                publishBtn.disabled = false;
+                loader.style.display = 'none';
             }
         });
+        
+        // Cancel button
+        cancelBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to discard your changes?')) {
+                window.location.href = 'index.html';
+            }
+        });
+        
+        // Save draft button (could implement local storage saving)
+        saveDraftBtn.addEventListener('click', () => {
+            const title = postTitleInput.value.trim() || 'Untitled Draft';
+            const content = quill.root.innerHTML;
+            const tagElements = tagsContainer.querySelectorAll('.tag');
+            const tags = Array.from(tagElements).map(el => el.textContent.trim());
+            
+            const draft = {
+                title,
+                content,
+                category: categorySelect.value || '',
+                tags,
+                savedAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('blogPostDraft', JSON.stringify(draft));
+            showAlert('Draft saved successfully!', 'success');
+        });
+        
+        // Utility to show alerts
+        function showAlert(message, type) {
+            editorAlert.textContent = message;
+            editorAlert.className = `alert alert-${type}`;
+            editorAlert.style.display = 'block';
+            
+            setTimeout(() => {
+                editorAlert.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
