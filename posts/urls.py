@@ -15,7 +15,7 @@ urlpatterns = [
     path('posts/<int:pk>/comments/', views.CommentListCreateView.as_view(), name='comment_list'),
     path('posts/<int:pk>/comments/<int:comment_pk>/', views.CommentDetailView.as_view(), name='comment_detail'),
 
-    path('likes/', views.LikeDisklikeListView.as_view(), name='react'),  # For liking/disliking
+    path('likes/', views.LikeDislikeListView.as_view(), name='react'),  # For listing liking/disliking
     path('like/', views.LikeDislikeCreateView.as_view(), name='react'),  # For liking/disliking
 
 ]

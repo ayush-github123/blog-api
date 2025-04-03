@@ -9,14 +9,15 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('id', 'post', 'content', 'created_at')
+        fields = ('id', 'post', 'content', 'like_count', 'dislike_count', 'created_at')
+        read_only_fields = ['like_count', 'dislike_count']
 
     def get_like_count(self, obj):
-        return obj.likes.filter(value=1).count()
+        return LikeDislike.objects.filter(content_type=ContentType.objects.get_for_model(obj), object_id=obj.id, value=1).count()
 
     def get_dislike_count(self, obj):
-        return obj.likes.filter(value=-1).count()
-    
+        return LikeDislike.objects.filter(content_type=ContentType.objects.get_for_model(obj), object_id=obj.id, value=-1).count()
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,20 +42,18 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = '__all__'
+        read_only_fields = ['like_count', 'dislike_count']
 
     def get_like_count(self, obj):
-        return obj.likes.filter(value=1).count()
+        return LikeDislike.objects.filter(content_type=ContentType.objects.get_for_model(obj), object_id=obj.id, value=1).count()
 
     def get_dislike_count(self, obj):
-        return obj.likes.filter(value=-1).count()
-
-
+        return LikeDislike.objects.filter(content_type=ContentType.objects.get_for_model(obj), object_id=obj.id, value=-1).count()
 
     def create(self, validated_data):
-        tags_data = validated_data.pop('tags', [])  # Extract tag names from request
+        tags_data = validated_data.pop('tags', [])  
         post = Post.objects.create(**validated_data)
 
-        # Create or get existing tags and associate with post
         for tag_name in tags_data:
             tag, created = Tag.objects.get_or_create(name=tag_name)
             post.tags.add(tag)
@@ -62,19 +61,18 @@ class PostSerializer(serializers.ModelSerializer):
         return post
 
 
-
 class LikeDislikeSerializers(serializers.ModelSerializer):
-    content_type = serializers.SlugRelatedField(queryset=ContentType.objects.all() ,slug_field='model')
+    user = serializers.CharField(read_only=True)
+    content_type = serializers.SlugRelatedField(queryset=ContentType.objects.all(), slug_field='model')
+
     class Meta:
         model = LikeDislike
         fields = '__all__'
-        read_only_fields = ['user']
-    
 
     def validate(self, data):
-        """  Validate that user can't like or dislike the same post twice """
+        """ Validate that user can't like or dislike the same post twice """
         request = self.context['request']
-        user = self.user
+        user = request.user
 
         existing_reaction = LikeDislike.objects.filter(
             user=user,
@@ -85,14 +83,14 @@ class LikeDislikeSerializers(serializers.ModelSerializer):
         if existing_reaction:
             if existing_reaction.value == data['value']:
                 existing_reaction.delete()
+                raise serializers.ValidationError("Reaction removed.")
             else:
                 existing_reaction.value = data['value']
                 existing_reaction.save()
                 return data
-                    
+
+        return data  # ✅ Always return data
 
     def create(self, validated_data):
-        validated_data['user'] == self.context['request'].user
+        validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
-
-                    

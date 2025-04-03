@@ -28,6 +28,8 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    likes = GenericRelation('LikeDislike', related_query_name='post_likes')
+
     def __str__(self):
         return f"{self.title} by {self.user.username}"
 
@@ -39,7 +41,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    likes = GenericRelation('LikeDislike', related_query_name='post_likes')
+    likes = GenericRelation('LikeDislike', related_query_name='comment_likes')
 
     def __str__(self):
         return f"{self.content} by {self.user.username} on Post {self.post}"
@@ -56,7 +58,6 @@ class LikeDislike(models.Model):
     value = models.IntegerField(choices=[(1, 'Like'), (-1, 'Dislike')])
     created_at = models.DateTimeField(auto_now_add=True)
 
-    likes = GenericRelation('LikeDislike', related_query_name='comment_likes')
 
 
     class Meta:

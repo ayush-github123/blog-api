@@ -14,7 +14,7 @@ POST http://127.0.0.1:8000/auth/login/
 Content-Type: application/json
 
 {
-    "username":"user2",
+    "username":"user1",
     "password":"ayush@1234"
 }
 
@@ -28,17 +28,17 @@ GET http://127.0.0.1:8000/api/posts/
 ### 4️⃣ Create a Post (Authenticated)
 POST http://127.0.0.1:8000/api/posts/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc4NDU3LCJpYXQiOjE3NDI4OTIwNTcsImp0aSI6IjY1ZTY0YzhiZDBhODQ4OGU5MDA4Yjc1NDY3NDBiZTgwIiwidXNlcl9pZCI6MX0.tbE2fCCXWXxsaTIMu5TGnVNuJxt-rJaLMlJ5GFscbt4 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzMjY5OTE2LCJpYXQiOjE3NDMxODM1MTYsImp0aSI6IjA3MzRmNWViMGM1ZTQ4MDJiOTU5ZTNkYjc0MDM5ZWU0IiwidXNlcl9pZCI6M30.YbZ2hO1rl22N8CGN1PEtonhz3jUIwlX7bDKEMbM1_TI 
 
 {
-    "title": "My First Blog",
+    "title": "My nth Blog",
     "content": "This is my first post using Django!",
     "category": 1,
     "tags": ["Django", "REST"]
 }
 
 ### 5️⃣ Get a Specific Post
-GET http://127.0.0.1:8000/posts/1/
+GET http://127.0.0.1:8000/api/posts/8/
 # Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc4NDU3LCJpYXQiOjE3NDI4OTIwNTcsImp0aSI6IjY1ZTY0YzhiZDBhODQ4OGU5MDA4Yjc1NDY3NDBiZTgwIiwidXNlcl9pZCI6MX0.tbE2fCCXWXxsaTIMu5TGnVNuJxt-rJaLMlJ5GFscbt4
 
 
@@ -54,7 +54,7 @@ Content-Type: application/json
 }
 
 ### 7️⃣ Delete a Post (Only Owner)
-DELETE http://127.0.0.1:8000/posts/2/
+DELETE http://127.0.0.1:8000/api/posts/8/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc4NDU3LCJpYXQiOjE3NDI4OTIwNTcsImp0aSI6IjY1ZTY0YzhiZDBhODQ4OGU5MDA4Yjc1NDY3NDBiZTgwIiwidXNlcl9pZCI6MX0.tbE2fCCXWXxsaTIMu5TGnVNuJxt-rJaLMlJ5GFscbt4
 
 ### 8️⃣ Get All Categories
@@ -93,27 +93,28 @@ GET http://127.0.0.1:8000/posts/?category=2
 GET http://127.0.0.1:8000/posts/?tags=2
 
 ### 1️⃣4️⃣ Get All Comments for a Post
-GET http://127.0.0.1:8000/posts/1/comments/
+GET http://127.0.0.1:8000/api/posts/8/comments/
 
 
 ### 1️⃣5️⃣ Create a Comment (Authenticated)
-POST http://127.0.0.1:8000/posts/1/comments/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc5MDg5LCJpYXQiOjE3NDI4OTI2ODksImp0aSI6IjBhMTJjN2ViYTE1NzQyMWU4NzY0NmQ4MDYzZWIxZGZlIiwidXNlcl9pZCI6M30.u8ntwaSEMwQdWFNqg-H-PEehDYe-_zog9LnfPDtXlig
+POST http://127.0.0.1:8000/api/posts/9/comments/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzMjY5OTE2LCJpYXQiOjE3NDMxODM1MTYsImp0aSI6IjA3MzRmNWViMGM1ZTQ4MDJiOTU5ZTNkYjc0MDM5ZWU0IiwidXNlcl9pZCI6M30.YbZ2hO1rl22N8CGN1PEtonhz3jUIwlX7bDKEMbM1_TI
 Content-Type: application/json
 
 {
-    "content": "comment by user2 on post 2!"
+    "content": "comment2 by user2 on post 2!"
 }
 
 
 
 ### 1️⃣6️⃣ Update a Comment (Only Owner)
 PUT http://127.0.0.1:8000/posts/1/comments/1/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc5MDg5LCJpYXQiOjE3NDI4OTI2ODksImp0aSI6IjBhMTJjN2ViYTE1NzQyMWU4NzY0NmQ4MDYzZWIxZGZlIiwidXNlcl9pZCI6M30.u8ntwaSEMwQdWFNqg-H-PEehDYe-_zog9LnfPDtXlig
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzMjY5OTE2LCJpYXQiOjE3NDMxODM1MTYsImp0aSI6IjA3MzRmNWViMGM1ZTQ4MDJiOTU5ZTNkYjc0MDM5ZWU0IiwidXNlcl9pZCI6M30.YbZ2hO1rl22N8CGN1PEtonhz3jUIwlX7bDKEMbM1_TI
 Content-Type: application/json
 
 {
-    "content": "Updated comment by user2 on post1"
+    "content": "Updated comment by user2 on post1",
+    "likes": 10
 }
 
 
@@ -123,6 +124,33 @@ DELETE http://127.0.0.1:8000/posts/1/comments/1/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTc5MDg5LCJpYXQiOjE3NDI4OTI2ODksImp0aSI6IjBhMTJjN2ViYTE1NzQyMWU4NzY0NmQ4MDYzZWIxZGZlIiwidXNlcl9pZCI6M30.u8ntwaSEMwQdWFNqg-H-PEehDYe-_zog9LnfPDtXlig 
 
 
+
+###
+
+
+GET http://127.0.0.1:8000/api/likes/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzMzA5MjQzLCJpYXQiOjE3NDMyMjI4NDMsImp0aSI6IjZlYjE0MGVkM2JjYzRhZTliOWJmMDA1ZTNlNGRlODY4IiwidXNlcl9pZCI6MX0.O7wfhc8RsDWG8Grr9_x9kOQ5117GljtJtpvVOFJt_ng
+
+
+###
+
+
+
+POST http://127.0.0.1:8000/api/like/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzMzA5MjQzLCJpYXQiOjE3NDMyMjI4NDMsImp0aSI6IjZlYjE0MGVkM2JjYzRhZTliOWJmMDA1ZTNlNGRlODY4IiwidXNlcl9pZCI6MX0.O7wfhc8RsDWG8Grr9_x9kOQ5117GljtJtpvVOFJt_ng
+
+
+{
+    "content_type": "post",  
+    "object_id": 9,     
+    "value": 1            
+}
+
+
+
+###
 
 
 
